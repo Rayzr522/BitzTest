@@ -1,0 +1,10 @@
+name: BitzTest
+main: com.rayzr522.bitztest.BitzTest
+version: 1.0
+description: "Just a small test plugin for BitzAPI"
+author: Rayzr522
+depend: [BitzAPI]
+commands:
+  nameitem:
+    description: "Name item"
+    usage: "/nameitem"
