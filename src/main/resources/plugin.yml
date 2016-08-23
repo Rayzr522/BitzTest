@@ -8,3 +8,6 @@ commands:
   nameitem:
     description: "Name item"
     usage: "/nameitem"
+  playerInfo:
+    description: "STuff"
+    usage: "/playerInfo"

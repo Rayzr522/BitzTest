@@ -1,5 +1,12 @@
+/bin/
 /target/
 .classpath
 .project
 .settings
 .metadata
+*.jardesc
+.idea
+.recommenders
+*.iml
+*.eml
+META-INF

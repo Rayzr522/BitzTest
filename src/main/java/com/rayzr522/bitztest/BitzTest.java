@@ -1,6 +1,8 @@
 
 package com.rayzr522.bitztest;
 
+import java.util.Random;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -10,12 +12,16 @@ import com.rayzr522.bitzapi.testcommands.Command;
 import com.rayzr522.bitzapi.utils.CommandUtils;
 import com.rayzr522.bitzapi.utils.item.ItemUtils;
 
+import net.md_5.bungee.api.ChatColor;
+
 public class BitzTest extends BitzPlugin {
 
 	@Override
 	public void onPluginLoad() {
 
-		messenger.setPrefix("&8&l(&7*name&8&l)&r");
+		messenger.setPrefix("&8&l(&7{name}&8&l)&r");
+
+		configManager.ensureFolderExists(configManager.getFile("players/"));
 
 	}
 
@@ -41,7 +47,62 @@ public class BitzTest extends BitzPlugin {
 
 		}).executorFor(getCommand("nameitem"));
 
-		Command child = base.addSubcommand("custom", this::subCommand).setUsage("/nameitem custom <type>");
+		base.addSubcommand("custom", this::subCommand).setUsage("/nameitem custom <type>");
+
+		new Command("playerInfo", (sender, command, cmd, args) -> {
+
+			if (!CommandUtils.isPlayer(sender)) {
+
+				messenger.playerMessage(sender, BitzMessages.ONLY_PLAYERS.msg);
+				return true;
+
+			}
+
+			Player p = (Player) sender;
+
+			if (args.length >= 1) {
+
+				if (args[0].equalsIgnoreCase("load")) {
+
+					try {
+
+						PlayerInfo info = configManager.load(PlayerInfo.class, "players/" + p.getUniqueId() + ".yml");
+
+						p.sendMessage(ChatColor.GREEN + "Info: " + ChatColor.BLUE + info.toString());
+
+					} catch (Exception e) {
+						sender.sendMessage(ChatColor.RED + "Failed to load player info file");
+						e.printStackTrace();
+					}
+
+				} else {
+
+					sender.sendMessage(ChatColor.RED + "Unknown command '" + args[0] + "'");
+
+				}
+
+				return true;
+
+			}
+
+			// PlayerInfo info = new PlayerInfo((Player) sender);
+			PlayerInfo info = new PlayerInfo();
+
+			info.uuid = p.getUniqueId().toString();
+			info.money = Math.abs(new Random().nextGaussian() * 50.0);
+			info.pos = p.getLocation().toVector();
+
+			try {
+				configManager.save(info, "players/" + info.uuid + ".yml");
+				p.sendMessage(ChatColor.DARK_PURPLE + "Data saved to players/" + info.uuid + ".yml");
+			} catch (Exception e) {
+				p.sendMessage(ChatColor.RED + "An error has occured! Please check the console.");
+				e.printStackTrace();
+			}
+
+			return true;
+
+		}).executorFor(getCommand("playerInfo"));
 
 	}
 
