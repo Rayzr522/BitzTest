@@ -11,3 +11,12 @@ commands:
   playerInfo:
     description: "STuff"
     usage: "/playerInfo"
+  debug:
+    description: "Debugs LoreData"
+    usage: "/debug [item]"
+  watch:
+    description: "Watch a player"
+    usage: "/watch <player>"
+  rp:
+    description: "Get the resource pack"
+    usage: "/rp"
